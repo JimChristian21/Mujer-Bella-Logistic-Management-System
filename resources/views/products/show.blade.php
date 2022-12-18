@@ -83,6 +83,8 @@
             cellAlign: 'center',
             contain: true
         });
+
+        
         
         $('#btn-increase').click(function () {
             if(Number($('#quantity').val()) < {{ $product['quantity'] }}) {

@@ -20,7 +20,14 @@
                     </thead>
                         <tbody>
                         @foreach($products as $product)
-                            <tr class="mb-bb-1 font-weight-bold">
+                            @if($product->quantity <= 10 && $product->quantity > 0)
+                                <tr class="mb-bb-1 font-weight-bold bg-warning text-dark">
+                            @elseif($product->quantity == 0)
+                                <tr class="mb-bb-1 font-weight-bold bg-danger text-light">
+                            @else
+                                <tr class="mb-bb-1 font-weight-bold">
+                            @endif
+                            
                                 <td class="text-center">
                                   {{ $product->name }}
                                 </td>

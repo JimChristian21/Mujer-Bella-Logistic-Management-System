@@ -146,6 +146,25 @@ div.dashboard a{
 	color: black;
 }
 
+.watermarked {
+	position: relative;
+  }
+  
+  .watermarked:after {
+	content: "";
+	display: block;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: -15px;
+	left: -15px;
+	background-image: url("../img/sold-out.png");
+	background-size: 100% 100%;
+	background-position: 30px 30px;
+	background-repeat: no-repeat;
+	opacity: 0.5;
+  }
+
 .diagnosis-text {
 	font-weight: bold;
 	font-size: 20px;

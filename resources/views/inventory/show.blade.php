@@ -28,7 +28,7 @@
                     <div class="w-100 justify-content-center" style="display: flex; align-items: center; justify-content-end">
                       <form id="delete-user" action="{{ route('inventory-destroy', $product['id']) }}" method="POST">
                         @csrf
-                        <a class="btn mb-btn btn-md mr-3" href="#"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+                        <a class="btn mb-btn btn-md mr-3" href="{{ route('inventory-edit', $product['id']) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
                         <a class="btn mb-btn btn-md mr-3 delete-btn" href="#"><i class="fa-solid fa-trash"></i> Delete</a>
                         <a class="btn mb-btn btn-md" href="#" onclick="window.history.back()"><i class="fa-solid fa-angle-left"></i> Back</a>
                         <button type="submit" class="submit">
@@ -64,6 +64,57 @@
           </div>
         @endforelse
     </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form action="{{ route('product-update') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-header">
+                                <h3 class="modal-title" id="exampleModalLabel">Update Information</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <label for="name">Name:</label>
+                                <input id="name" class="form-control" type="text"  name="name" value="{{ $product['name'] }}" required>
+
+                                <label for="description" class="mt-3">Description:</label>
+                                <input id="description" class="form-control" type="text" value="{{ $product['description'] }}"  name="description" required>
+
+                                <label for="quantity" class="mt-3">Quantity:</label>
+                                <input id="quantity" class="form-control" type="number" value="{{ $product['quantity'] }}"  name="quantity" required>
+
+                                <label for="unit_price" class="mt-3">Unit Price:</label>
+                                <input id="unit_price" class="form-control" type="number" value="{{ $product['price'] }}" name="price" required>
+
+                                <input type="file" id="images" name="filename" class="form-control">
+
+                                <div class="mb-3 increment">
+                                  <label for="images">Images:</label>
+                                  <input type="file" id="images" name="filename[]" class="form-control">
+                                </div>
+                                <div class="clone hide">
+                                  <div class="control-group input-group" style="margin-top:10px">
+                                    <input type="file" name="filename[]" class="form-control">
+                                    <div class="input-group-btn"> 
+                                      <button class="btn btn-danger" type="button"><i class="glyphicon glyphicon-remove"></i> Remove</button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="d-flex justify-content-end mt-3">
+                                  <button class="btn mb-btn btn-sm add-btn" type="button"><i class="glyphicon glyphicon-plus"></i>Add</button>
+                                </div>
+                            </div>
+                            <input type="hidden" name="product_id" value="{{ $product['id'] }}">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn mb-btn submit-btn">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 </div>
 @endsection
 
@@ -103,5 +154,16 @@
             // });
 						$('.submit').click();
         });
+
+
+        $(document).ready(function() {
+            var html = $(".clone").html();
+            $(".add-btn").click(function(){ 
+                $(".increment").after(html);
+            });
+            $("body").on("click",".btn-danger",function(){ 
+                $(this).parents(".control-group").remove();
+            });
+          });
   </script>
 @endsection

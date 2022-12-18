@@ -213,6 +213,18 @@ class AdminOrderController extends Controller
         $order = Order::find($id);
         $order->order_status = $request->status;
         $order->save();
+
+        if($request->status == 'Received') 
+        {
+            $orderProducts = OrderProduct::where('order_id', '=', $id)->get();
+        
+            foreach($orderProducts as $orderProduct) 
+            {
+                $product = Products::where('id', '=', $orderProduct->product_id)->get();
+                $product[0]->quantity -=  $orderProduct->quantity;
+                $product[0]->save();
+            }
+        }
         
         return redirect()->route('staff-order-show', $id);
     }

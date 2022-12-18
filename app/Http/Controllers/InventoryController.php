@@ -21,6 +21,47 @@ class InventoryController extends Controller
         return view('inventory.create');
     }
 
+    function edit($id) 
+    {
+        $product = Products::find($id);
+        return view('inventory.edit', [ 'product' => $product]);
+    }
+
+    function update(Request $request) 
+    {
+        $product = Products::find($request->product_id);
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->quantity = $request->quantity;
+        $product->price = $request->unitPrice;
+        $product->save();
+
+        if($request->hasfile('filename'))
+        {
+            $productImages = ProductImage::where('product_id', '=', $request->product_id)->get();
+            $productImageCount = 0;
+
+            foreach($productImages as $productImage)
+            {
+                $productImage->delete();
+            }
+
+            foreach($request->file('filename') as $image)
+            {
+                $name= $request->name . '-' . $productImageCount . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path().'/images/', $name);
+                $data[] = $name;
+                $productImageCount++;
+
+                $productImage = new ProductImage();
+                $productImage->link = $name;
+                $productImage->product_id = $request->product_id;
+                $productImage->save();
+            }
+        }
+        return redirect()->route('inventory-show', $request->product_id);
+    }
+
     function store(Request $request) {
         $request->validate([
             'name' => 'required',

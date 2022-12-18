@@ -16,20 +16,20 @@ use Illuminate\Http\Request;
 class ProductsController extends Controller
 {
     function index() {
-
+        
         $products = Products::all();
         $productsImages = ProductImage::all();
         $items = [];
 
         foreach($products as $product) {
             $images = [];
-            
+                
             foreach($productsImages as $image) {
                 if($image['product_id'] == $product['id']) {
                     $images[] = $image['link'];
                 }
             }
-        
+            
             $items[] = [
                 'id' => $product['id'],
                 'name' => $product['name'],
@@ -80,7 +80,6 @@ class ProductsController extends Controller
     function rate(Request $request)
     {
 
-        
         $order_product = OrderProduct::where([
             ['order_id', '=', $request->order_id],
             ['product_id', '=', $request->product_id]

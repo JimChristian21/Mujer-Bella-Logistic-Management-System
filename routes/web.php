@@ -25,6 +25,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/products', [App\Http\Controllers\ProductsController::class, 'index'])->name('product-list');
 Route::get('/products/show/{id}', [App\Http\Controllers\ProductsController::class, 'show'])->name('product-show');
 Route::POST('/products/rating', [App\Http\Controllers\ProductsController::class, 'rate'])->name('product-rate');
+Route::POST('/products/update', [App\Http\Controllers\ProductsController::class, 'update'])->name('product-update');
+
 
 Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart-show');
 Route::post('/cart/product/delete/{id}', [App\Http\Controllers\CartController::class, 'destroy'])->name('cart-product-destroy');
@@ -52,6 +54,8 @@ Route::GET('/users/{id}', [App\Http\Controllers\UserController::class, 'show'])-
 
 Route::get('/inventory', [App\Http\Controllers\InventoryController::class, 'index'])->name('inventory-list');
 Route::get('/inventory/product/create', [App\Http\Controllers\InventoryController::class, 'create'])->name('inventory-create');
+Route::get('/inventory/product/edit/{id}', [App\Http\Controllers\InventoryController::class, 'edit'])->name('inventory-edit');
+Route::POST('/inventory/product/update/', [App\Http\Controllers\InventoryController::class, 'update'])->name('inventory-update');
 Route::POST('/inventory/product/store', [App\Http\Controllers\InventoryController::class, 'store'])->name('inventory-store');
 Route::GET('/inventory/product/show/{id}', [App\Http\Controllers\InventoryController::class, 'show'])->name('inventory-show');
 Route::POST('/inventory/product/destroy/{id}', [App\Http\Controllers\InventoryController::class, 'destroy'])->name('inventory-destroy');
