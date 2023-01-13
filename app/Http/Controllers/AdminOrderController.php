@@ -228,4 +228,9 @@ class AdminOrderController extends Controller
         
         return redirect()->route('staff-order-show', $id);
     }
+
+    function test() 
+    {
+
+    }
 }

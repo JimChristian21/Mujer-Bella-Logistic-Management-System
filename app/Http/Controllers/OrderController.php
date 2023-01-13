@@ -14,10 +14,12 @@ use App\Models\{
     Products,
     ProductImage,
     User,
-    UserPersonalInformation
+    UserPersonalInformation,
+    Payment
 };
 use DateTime;
 use DateTimeZone;
+use Luigel\Paymongo\Facades\Paymongo;
 
 class OrderController extends Controller
 {
@@ -49,6 +51,7 @@ class OrderController extends Controller
         $orderAddress = OrderAddress::where('order_id', '=', $orderItem->id)->get();
         $orderPayment = OrderPayment::where('order_id', '=', $orderItem->id)->get();
         $orderProducts = OrderProduct::where('order_id', '=', $orderItem->id)->get();
+        $payment = Payment::where("order_id", "=", $orderItem->id)->get("checkout_url")->first();
 
         $orderShippingAddress = $orderAddress[0]->street . ', ' . $orderAddress[0]->barangay . ', ' . $orderAddress[0]->city . ', ' . $orderAddress[0]->province;
         $zipCode = $orderAddress[0]->zip_code;
@@ -95,13 +98,15 @@ class OrderController extends Controller
             'totalPrice' => $totalPrice,
             'orderStatus' => $orderItem->order_status,
             'orderAddress' => $shippingAddress,
+            'checkout_url' => $payment->checkout_url,
             'user' => $user
         ];
-        // dd($data);
+        
         return view('order.show', ['data' => $data]);
     }
 
     function store(Request $request, $id) {
+    
         $request->validate([
             'street' => 'required',
             'barangay' => 'required',
@@ -111,6 +116,7 @@ class OrderController extends Controller
         ]);
     
         $cartProducts = CartProduct::where('cart_id', '=', $id)->get();
+        $totalPrice = 0; 
         
         $dt = new DateTime("now", new DateTimeZone('Asia/Manila'));
 
@@ -149,11 +155,41 @@ class OrderController extends Controller
             $orderProduct->product_id = $product[0]->id;
             $orderProduct->quantity = $cartProduct->quantity;
             $orderProduct->price = $product[0]->price;
+            $totalPrice += $orderProduct->price;
             $orderProduct->save();
 
             $cartItem = CartProduct::find($cartProduct->id);
             $cartItem->delete();
         }
+
+        $gcashSource = Paymongo::source()->create([
+            'type' => 'gcash',
+            'amount' => $totalPrice,
+            'currency' => 'PHP',
+            'redirect' => [
+                'success' => 'https://web.facebook.com/?_rdc=1&_rdr',
+                'failed' => 'https://www.google.com/search?q=google.com&oq=google.com+&aqs=chrome..69i64j5j69i60l5j69i65.7908j0j4&sourceid=chrome&ie=UTF-8'
+            ],
+            'billing' => [
+                'address' => [
+                    'city' => 'asdf',
+                    'country' => 'PH',
+                    'line1' => 'asdf',
+                    'line2' => 'asdf',
+                    'postal_code' => 'asfd',
+                    'state' => 'asdf',
+                ],
+                'email' => 'test@gmail.com',
+                'name' => 'Juan',
+                'phone' => '096734444947'
+            ]
+        ]);
+
+        $payment = new Payment();
+        $payment->order_id = $newOrder->id;
+        $payment->checkout_url = $gcashSource->redirect["checkout_url"];
+        $payment->price = $gcashSource->amount;
+        $payment->save();
 
         $orders = Order::where('user_id', '=' , Auth::user()->id)->get();
         $data = [];

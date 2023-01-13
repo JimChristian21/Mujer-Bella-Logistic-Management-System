@@ -59,6 +59,7 @@ Route::POST('/inventory/product/update/', [App\Http\Controllers\InventoryControl
 Route::POST('/inventory/product/store', [App\Http\Controllers\InventoryController::class, 'store'])->name('inventory-store');
 Route::GET('/inventory/product/show/{id}', [App\Http\Controllers\InventoryController::class, 'show'])->name('inventory-show');
 Route::POST('/inventory/product/destroy/{id}', [App\Http\Controllers\InventoryController::class, 'destroy'])->name('inventory-destroy');
+Route::get('/inventory/test', [App\Http\Controllers\InventoryController::class, 'test'])->name('inventory-test');
 
 
 

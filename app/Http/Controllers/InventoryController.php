@@ -7,6 +7,7 @@ use App\Models\Products;
 use App\Models\ProductImage;
 use App\Models\feedback;
 use App\Models\UserPersonalInformation;
+use Luigel\Paymongo\Facades\Paymongo;
 
 class InventoryController extends Controller
 {
@@ -138,5 +139,63 @@ class InventoryController extends Controller
         $products = Products::all();
 
         return redirect('inventory');
+    }
+
+    function test() 
+    {
+        $gcashSource = Paymongo::source()->create([
+            'type' => 'gcash',
+            'amount' => 10000,
+            'currency' => 'PHP',
+            'redirect' => [
+                'success' => 'mujerbella',
+                'failed' => 'https://www.google.com/search?q=google.com&oq=google.com+&aqs=chrome..69i64j5j69i60l5j69i65.7908j0j4&sourceid=chrome&ie=UTF-8'
+            ],
+            'billing' => [
+                'address' => [
+                    'city' => 'asdf',
+                    'country' => 'PH',
+                    'line1' => 'asdf',
+                    'line2' => 'asdf',
+                    'postal_code' => 'asfd',
+                    'state' => 'asdf',
+                ],
+                'email' => 'test@gmail.com',
+                'name' => 'Juan',
+                'phone' => '096734444947'
+            ]
+        ]);
+
+        // $paymentMethod = Paymongo::paymentMethod()->create([
+        //     'type' => 'card',
+        //     'details' => [
+        //         'card_number' => '4343434343434345',
+        //         'exp_month' => 12,
+        //         'exp_year' => 25,
+        //         'cvc' => "123",
+        //     ],
+        //     'billing' => [
+        //         'address' => [
+        //             'line1' => 'Somewhere there',
+        //             'city' => 'Cebu City',
+        //             'state' => 'Cebu',
+        //             'country' => 'PH',
+        //             'postal_code' => '6000',
+        //         ],
+        //         'name' => 'Rigel Kent Carbonel',
+        //         'email' => 'rigel20.kent@gmail.com',
+        //         'phone' => '0935454875545'
+        //     ],
+        // ]);
+
+        // $link = Paymongo::link()->create([
+        //     'amount' => 100.00,
+        //     'description' => 'Link Test',
+        //     'remarks' => 'laravel-paymongo'
+        // ]);
+
+        // $paymentMethod = Paymongo::paymentMethod()->find($paymentMethod->id);
+
+        dd($gcashSource);
     }
 }

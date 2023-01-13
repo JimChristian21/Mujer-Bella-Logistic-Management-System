@@ -74,7 +74,7 @@
                         <button type="submit" class="btn btn-md mb-btn float-right cancel-order-btn">Cancel Order
                         </button>
                     </form>
-                    <button class="btn btn-md mb-btn float-right mr-2" data-toggle="modal" data-target="#exampleModal">Pay</button>
+                    <a href="{{ $data['checkout_url'] }}" class="btn btn-md mb-btn float-right mr-2" target="_blank">Pay through Gcash</a>
                 @endif
                 <span class="float-right mr-4 mt-2 font-weight-bold">Total: <i class="fa-solid fa-peso-sign"></i> {{ $data['totalPrice'] }}</span>
                 <h3 class="mr-4 font-weight-bold text-center"><strong>Status:</strong> {{ $data['orderStatus'] }}</h3>
